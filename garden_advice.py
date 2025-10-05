@@ -1,21 +1,39 @@
-# Ask the user for input
-season = input("Enter the season (summer or winter): ").lower()
-plant_type = input("Enter the plant type (flower or vegetable): ").lower()
+"""
+Garden advice generator.
 
-advice = ""
+- Uses mapping dicts instead of long if/elif chains
+- Splits logic into functions
+- Easy to extend: add keys to SEASON_TIPS / PLANT_TIPS
+"""
 
-if season == "summer":
-    advice += "Water your plants regularly and provide some shade.\n"
-elif season == "winter":
-    advice += "Protect your plants from frost with covers.\n"
-else:
-    advice += "No advice for this season.\n"
+SEASON_TIPS = {
+    "summer": "Water your plants regularly and provide some shade.",
+    "winter": "Protect your plants from frost with covers.",
+}
 
-if plant_type == "flower":
-    advice += "Use fertiliser to encourage blooms."
-elif plant_type == "vegetable":
-    advice += "Keep an eye out for pests!"
-else:
-    advice += "No advice for this type of plant."
+PLANT_TIPS = {
+    "flower": "Use fertiliser to encourage blooms.",
+    "vegetable": "Keep an eye out for pests!",
+}
 
-print("\nYour gardening advice:\n" + advice)
+def normalise(text: str) -> str:
+    """Trim and lowercase user input."""
+    return (text or "").strip().lower()
+
+def advice_for(season: str, plant_type: str) -> str:
+    """Return combined advice lines for the chosen season and plant type."""
+    s = normalise(season)
+    p = normalise(plant_type)
+
+    season_line = SEASON_TIPS.get(s, "No advice for this season.")
+    plant_line  = PLANT_TIPS.get(p, "No advice for this type of plant.")
+    return f"{season_line}\n{plant_line}"
+
+def main():
+    # I/O kept simple for CLI; reuse advice_for() in tests or UI
+    season = input("Enter the season (e.g., summer / winter): ")
+    plant_type = input("Enter the plant type (e.g., flower / vegetable): ")
+    print("\nYour gardening advice:\n" + advice_for(season, plant_type))
+
+if __name__ == "__main__":
+    main()
